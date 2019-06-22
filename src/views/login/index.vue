@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 			<img class="login-logo" src="../../assets/img/logo.jpeg" alt="logo" />
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">微喵后台管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,25 +41,18 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span> password: 123456</span>
       </div>
 
     </el-form>
+		<div class="copyright">2014-2019 &copy; 微喵技术部</div>
   </div>
 </template>
-<style scoped="scoped">
-	.login-logo{
-		display: block;
-		width: 160px;
-		height: 160px;
-		margin: 0 auto 30px;
-		border-radius: 20px;
-	}
-</style>
+
 <script>
 import { validUsername } from '@/utils/validate'
 
@@ -68,14 +61,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码长度最少为6位'))
       } else {
         callback()
       }
@@ -83,7 +76,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -195,11 +188,17 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 120px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }
-
+	.login-logo{
+		display: block;
+		width: 160px;
+		height: 160px;
+		margin: 0 auto 30px;
+		border-radius: 20px;
+	}
   .tips {
     font-size: 14px;
     color: #fff;
@@ -241,5 +240,10 @@ $light_gray:#eee;
     cursor: pointer;
     user-select: none;
   }
+	.copyright{
+		text-align: center;
+		color:#fff;
+		margin: 230px auto 50px;
+	}	
 }
 </style>

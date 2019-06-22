@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Admin Template' // page title
+const name = defaultSettings.title || 'wemew Admin' // page title
 const port = 9528 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/

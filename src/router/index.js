@@ -49,18 +49,38 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-
+	{
+		path: '/operation',
+		component: Layout,
+		redirect:'/operation/activity',
+		name:'operation',
+		meta: {title: '运营管理',icon:'example'},
+		children:[
+			{
+			  path: 'activity',
+			  name: 'activity',
+			  component: () => import('@/views/operation/activity/index'),
+			  meta: { title: '活动管理', icon: 'table' }
+			},
+			{
+				path:'statistics',
+				name:'statistics',
+				component: () => import('@/views/operation/statistics/index'),
+				meta: { title: '数据统计', icon: 'table' }
+			}
+		]
+	},
   {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    meta: { title: '表格&树状', icon: 'example' },
     children: [
       {
         path: 'table',
@@ -85,7 +105,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        meta: { title: '表单', icon: 'form' }
       }
     ]
   },
