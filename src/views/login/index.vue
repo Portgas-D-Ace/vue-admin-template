@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
+			<img class="login-logo" src="../../assets/img/logo.jpeg" alt="logo" />
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
@@ -51,7 +51,15 @@
     </el-form>
   </div>
 </template>
-
+<style scoped="scoped">
+	.login-logo{
+		display: block;
+		width: 160px;
+		height: 160px;
+		margin: 0 auto 30px;
+		border-radius: 20px;
+	}
+</style>
 <script>
 import { validUsername } from '@/utils/validate'
 
