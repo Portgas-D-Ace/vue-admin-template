@@ -1,9 +1,9 @@
 import Mock from 'mockjs'
 
 const data = Mock.mock({
-  'items|30': [{
+  'items|300': [{
     id: '@id',
-    title: '@sentence(5, 2)',
+    title: '@sentence(6, 3)',
     'status|1': ['已开启', '已关闭', '已下线'],
     name: '新用户活动@id',
     start_time: '@datetime',

@@ -64,8 +64,39 @@ export const constantRoutes = [
 			{
 			  path: 'activity',
 			  name: 'activity',
+				redirect:'/operation/activity/index',
 			  component: () => import('@/views/operation/activity/index'),
-			  meta: { title: '活动管理', icon: 'table' }
+			  meta: { title: '活动管理', icon: 'table' },
+				children:[
+					{
+						path: 'index',
+						name: 'activityIndex',
+						hidden: true,
+						component: () => import('@/views/operation/activity/list'),
+						meta: { title: '活动列表'},
+					},
+					{
+						path: 'add',
+						name: 'activityAdd',
+						hidden: true,
+						component: () => import('@/views/operation/activity/add'),
+						meta: { title: '添加新活动'},
+					},
+					{
+						path: 'edit',
+						name: 'activityEdit',
+						hidden: true,
+						component: () => import('@/views/operation/activity/edit'),
+						meta: { title: '编辑活动'},
+					},
+				]
+			},
+			{
+				path: 'add',
+				name: 'add',
+				hidden: true,
+				component: () => import('@/views/operation/activity/add'),
+				meta: { title: '添加新活动'},
 			},
 			{
 				path:'statistics',
