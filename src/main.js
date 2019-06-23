@@ -4,7 +4,8 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+// import locale from 'element-ui/lib/locale/lang/cn' // lang  英文包
+import locale from 'element-ui/lib/locale/lang/zh-CN' // lang  中文包
 
 import '@/styles/index.scss' // global css
 

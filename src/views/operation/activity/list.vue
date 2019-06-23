@@ -62,9 +62,7 @@
 </template>
 
 <script>
-	import {
-		getList
-	} from '@/api/table'
+	import {getList} from '@/api/table'
 	export default {
 		filters: {
 			statusFilter(status) {
@@ -129,18 +127,7 @@
 	/* .el-table td{
 		padding: 4px 0;
 	} */
-	.page-container {
-		min-height: calc(100vh - 130px);
-		width: 100%;
-		position: relative;
-		overflow: hidden;
-		padding: 40px;
-		border-radius: 20px;
-		-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1);
-		-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1);
-		background-color: white;
-	}
+	
 	.header-box {
 		position: relative;
 		margin-bottom: 20px;
