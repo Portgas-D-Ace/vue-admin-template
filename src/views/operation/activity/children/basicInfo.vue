@@ -2,6 +2,20 @@
 <template>
 	<div>
 		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+
+			<el-form-item label="活动ID" v-if="id">
+				<el-col :span="6">
+					<el-input v-model="id" :disabled="true"></el-input>
+				</el-col>
+
+			</el-form-item>
+			
+			<el-form-item label="活动状态" v-if="id">
+				<el-col :span="6">
+					<el-switch v-model="activeState.state" active-text="已开启" inactive-text="已关闭">
+					</el-switch>
+				</el-col>
+			</el-form-item>
 			
 			<el-form-item label="活动名称" required>
 				<el-col :span="12">
@@ -34,10 +48,10 @@
 					<el-form-item label="">
 						<el-input type="textarea" v-model="barId" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"></el-input>
 					</el-form-item>
-					<el-button  class="button-new-tag" slot="reference" size="small">添加需要剔除的酒吧id</el-button>
+					<el-button class="button-new-tag" slot="reference" size="small">添加需要剔除的酒吧id</el-button>
 				</el-popover>
 			</el-form-item>
-			
+
 			<el-form-item label="活动说明" prop="desc">
 				<el-input type="textarea" v-model="ruleForm.desc"></el-input>
 			</el-form-item>
@@ -50,6 +64,14 @@
 	export default {
 		name: 'basicInfo',
 		props: {
+			id: {
+				type: String,
+				required: true
+			},
+			activeState: {
+				type: Object,
+				required: true
+			},
 			ruleForm: {
 				type: Object,
 				required: true
@@ -61,7 +83,7 @@
 		},
 		data() {
 			return {
-				barId:'',
+				barId: '',
 			}
 		},
 		methods: {
@@ -71,13 +93,13 @@
 			},
 			//添加酒吧id
 			handleInputConfirm() {
-				let idStr =  this.barId.replace(/\s*/g,"");//获取输入的酒吧id字符串--并去除所有空格
-				if(!idStr)return;	
-				let idList = idStr.split(',');				//分割成数组
-				idList = Array.from(new Set(idList));		//数组去重
-				for(let i = 0; i< idList.length; i++){
+				let idStr = this.barId.replace(/\s*/g, ""); //获取输入的酒吧id字符串--并去除所有空格
+				if (!idStr) return;
+				let idList = idStr.split(','); //分割成数组
+				idList = Array.from(new Set(idList)); //数组去重
+				for (let i = 0; i < idList.length; i++) {
 					let inputValue = idList[i];
-					if(!inputValue)return
+					if (!inputValue) return
 					if (this.ruleForm.barTags.includes(inputValue)) {
 						// 酒吧id 已存在 
 						// this.$message({
@@ -96,15 +118,18 @@
 </script>
 
 <style>
-	.el-tabs__content{
+	.el-tabs__content {
 		padding-top: 30px;
 	}
+
 	.el-form-item__label {
 		padding-right: 15px;
 	}
+
 	.el-tag {
 		margin-right: 10px;
 	}
+
 	.button-new-tag {
 		height: 32px;
 		line-height: 30px;

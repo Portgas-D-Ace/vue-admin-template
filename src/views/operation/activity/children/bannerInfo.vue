@@ -8,7 +8,7 @@
 		</div>
 		<el-form class="demo-form" v-for="(item, index) in banner" :model="item" label-width="100px" :key="index">
 			<el-form-item label="上传图片" required>
-				<el-col :span="14">
+				<el-col :span="10">
 					<el-upload
 						class="banner-uploader"
 						:auto-upload="false"
@@ -22,7 +22,7 @@
 						<i v-else class="el-icon-plus banner-uploader-icon"></i>
 					</el-upload>
 				</el-col>
-				<el-col :span="4" align="right">
+				<el-col :span="8" align="right">
 					<el-button type="primary" @click="addBanner" v-if="index == banner.length-1">新增Banner</el-button>
 					<el-button type="primary" @click="removeBanner(index)" v-if="banner.length>0">删除</el-button>
 				</el-col>
@@ -60,11 +60,11 @@
 		methods:{
 			//增加banner
 			addBanner(){
-				this.banner.push(this.bannerDefault);
+				let obj = Object.assign({},this.bannerDefault);//复制一个对象
+				this.banner.push(obj);
 			},
 			//删除banner
 			removeBanner(i){
-				console.log(i);
 				this.banner.splice(i,1);
 			},
 			//图片上传成功后执行
@@ -119,14 +119,14 @@
 	.banner-uploader-icon {
 		font-size: 28px;
 		color: #8c939d;
-		width: 750px;
-		height: 90px;
-		line-height: 90px;
+		width: 375px;
+		height: 45px;
+		line-height: 45px;
 		text-align: center;
 	}
 	.banner {
-		width: 750px;
-		height: 90px;
+		width: 375px;
+		height: 45px;
 		display: block;
 	}
 </style>

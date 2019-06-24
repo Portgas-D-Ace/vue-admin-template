@@ -2,14 +2,14 @@
 <template>
 	<div>
 		<div align="right">
-			<el-col :span="16">
+			<el-col :span="18">
 				<el-button type="primary" @click="addPop" v-if="!pop.length">新增弹窗</el-button>
 			</el-col>
 		</div>
 		<el-form class="demo-form" v-for="(item, index) in pop" :model="item" ref="ruleForm" label-width="100px" :key="index">
 			<el-form-item label="展示顺序" required>
 				<el-col :span="4"><el-input v-model="item.order" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
-				<el-col :span="12" align="right">
+				<el-col :span="14" align="right">
 					<el-button type="primary" @click="addPop" v-if="index == pop.length-1">新增弹窗</el-button>
 					<el-button type="primary" @click="removePop(index)" v-if="pop.length>0">删除</el-button>
 				</el-col>
@@ -80,11 +80,11 @@ export default {
 	methods: {
 		//增加pop
 		addPop(){
-			this.pop.push(this.popDefault);
+			let obj = Object.assign({},this.popDefault);//复制一个对象
+			this.pop.push(obj);
 		},
 		//删除pop
 		removePop(i){
-			console.log(i);
 			this.pop.splice(i,1);
 		},
 		//图片上传成功后执行

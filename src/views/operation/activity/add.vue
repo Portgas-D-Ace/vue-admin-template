@@ -1,8 +1,10 @@
 <template>
 	<div class="page-container">
+		
 		<el-tabs v-model="activeName">
+			
 			<el-tab-pane label="活动基本配置" name="first">
-					<basicinfo :ruleForm="basic.ruleForm" :rules="basic.rules"></basicinfo>
+					<basicinfo :ruleForm="basic.ruleForm" :rules="basic.rules" :id="id" :activeState="activeState"></basicinfo>
 			</el-tab-pane>
 			
 			<el-tab-pane label="banner配置" name="second">
@@ -22,18 +24,22 @@
 			</el-tab-pane>
 			
 		</el-tabs>
+		
 		<div class="btn-box">
 			<el-button type="primary" @click="submitForm">立即创建</el-button>
 			<el-button @click="resetForm">重置</el-button>
 		</div>
+		
 	</div>
 </template>
 <script>
+	//引入 对应组件
 	import Basicinfo from './children/basicInfo'
 	import Popinfo from './children/popInfo'
 	import Bannerinfo from './children/bannerInfo'
 	import Msgflowinfo from './children/msgflowInfo'
 	import Bigscreeninfo from './children/bigscreenInfo'
+	
 	
 	export default {
 		components: {
@@ -43,6 +49,10 @@
 			return {
 				actionUrl:'https://jsonplaceholder.typicode.com/posts/',
 				activeName: 'first',
+				id: '',
+				activeState:{
+					state:true,
+				},
 				//基本数据
 				basic: {
 					ruleForm: {
@@ -176,6 +186,7 @@
 	.btn-box {
 		position: absolute;
 		bottom: 40px;
+		left: 0;
 		width: 100%;
 		height: 40px;
 		text-align: center;

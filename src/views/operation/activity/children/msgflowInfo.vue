@@ -6,13 +6,12 @@
 		</el-col>
 		<el-form class="demo-form" v-for="(item, index) in msgFlow" :model="item" label-width="120px" :key="index">
 			<el-form-item label="信息流文案" required>
-				<el-col :span="12"><el-input v-model="item.info" placeholder="" maxlength="70"></el-input></el-col>
-				<el-col :span="4" align="right">
+				<el-col :span="10"><el-input v-model="item.info" placeholder="请输入信息流文案" type="textarea" autosize maxlength="70"></el-input></el-col>
+				<el-col :span="8" align="right">
 					<el-button type="primary" @click="addMsgFlow" v-if="index == msgFlow.length-1">新增信息流</el-button>
 					<el-button type="primary" @click="removeMsgFlow(index)" v-if="msgFlow.length>0">删除</el-button>
 				</el-col>
 			</el-form-item>
-			
 			<el-form-item label="上传图片">
 				<el-col :span="8">
 					<el-upload
@@ -32,7 +31,7 @@
 			</el-form-item>
 			
 			<el-form-item label="展示顺序" required>
-				<el-col :span="4"><el-input v-model="item.order" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
+				<el-col :span="5"><el-input v-model="item.order" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
 			</el-form-item>
 			
 			<el-form-item label="跳转连接" required>
@@ -103,7 +102,8 @@ export default {
 	methods:{
 		//增加信息流
 		addMsgFlow(){
-			this.msgFlow.push(this.msgFlowDefault);
+			let obj = Object.assign({},this.msgFlowDefault);//复制一个对象
+			this.msgFlow.push(obj);
 		},
 		//删除信息流
 		removeMsgFlow(i){
@@ -188,14 +188,14 @@ export default {
 	.msgflow-uploader-icon {
 		font-size: 28px;
 		color: #8c939d;
-		width: 375px;
-		height: 280px;
-		line-height: 280px;
+		width: 250px;
+		height: 188px;
+		line-height: 188px;
 		text-align: center;
 	}
 	.msgflow {
-		width: 375px;
-		height: 280px;
+		width: 250px;
+		height: 188px;
 		display: block;
 	}
 </style>

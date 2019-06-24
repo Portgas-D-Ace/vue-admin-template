@@ -2,11 +2,11 @@
 <template>
 	<div>
 		<el-col :span="18" align="right">
-			<el-button type="primary" @click="addBigScreen" v-if="!bigScreen.length">新增大屏官方动画</el-button>
+			<el-button type="primary" @click="addBigScreen" v-if="!bigScreen.length">新增大屏动画</el-button>
 		</el-col>
 		<el-form class="demo-form" v-for="(item, index) in bigScreen" :model="item" label-width="120px" :key="index">
 			<el-form-item label="上传图片/视频" required>
-				<el-col :span="12">
+				<el-col :span="10">
 					<el-upload
 						class="bigscreen-uploader"
 						:auto-upload="false"
@@ -23,7 +23,7 @@
 						<i v-else class="el-icon-plus bigscreen-uploader-icon"></i>
 					</el-upload>
 				</el-col>
-				<el-col :span="6" align="right">
+				<el-col :span="8" align="right">
 					<el-button type="primary" @click="addBigScreen" v-if="index == bigScreen.length-1">新增大屏动画</el-button>
 					<el-button type="primary" @click="removeBigScreen(index)" v-if="bigScreen.length>0">删除</el-button>
 				</el-col>
@@ -31,7 +31,7 @@
 			
 			
 			<el-form-item label="展示时长" required>
-				<el-col :span="3"><el-input v-model="item.times" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
+				<el-col :span="5"><el-input v-model="item.times" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
 				<el-col :span="1" align="left"><span style="padding-left: 8px;">秒</span></el-col>
 				<!-- <el-radio-group v-model="item.times">
 					<el-radio :label="10">10s</el-radio>
@@ -100,7 +100,8 @@
 		methods:{
 			//增加信息流
 			addBigScreen(){
-				this.bigScreen.push(this.bigScreenDefault);
+				let obj = Object.assign({},this.bigScreenDefault);//复制一个对象
+				this.bigScreen.push(obj);
 			},
 			//删除信息流
 			removeBigScreen(i){
@@ -194,14 +195,14 @@
 	.bigscreen-uploader-icon {
 		font-size: 28px;
 		color: #8c939d;
-		width: 480px;
-		height: 270px;
-		line-height: 270px;
+		width: 240px;
+		height: 135px;
+		line-height: 135px;
 		text-align: center;
 	}
 	.bigscreen {
-		width: 480px;
-		height: 270px;
+		width: 240px;
+		height: 135px;
 		display: block;
 	}
 </style>

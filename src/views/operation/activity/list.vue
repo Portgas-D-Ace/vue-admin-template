@@ -96,7 +96,7 @@
 				getList().then(response => {
 					this.list = response.data.items
 					this.val = (this.list.length / this.pagesize) < 1 ? true : false
-					console.log(this.val)
+					//console.log(this.val)
 					this.listLoading = false
 				})
 			},
@@ -124,10 +124,6 @@
 </script>
 
 <style>
-	/* .el-table td{
-		padding: 4px 0;
-	} */
-	
 	.header-box {
 		position: relative;
 		margin-bottom: 20px;
