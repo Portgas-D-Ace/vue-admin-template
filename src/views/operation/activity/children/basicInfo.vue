@@ -1,7 +1,9 @@
+<!-- 活动基本配置 -->
 <template>
 	<div>
-		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-			<el-form-item label="活动名称" prop="name">
+		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+			
+			<el-form-item label="活动名称" required>
 				<el-col :span="12">
 					<el-input v-model="ruleForm.name"></el-input>
 				</el-col>
@@ -15,7 +17,6 @@
 						<el-checkbox v-model="ruleForm.date2">永久</el-checkbox>
 					</el-form-item>
 				</el-col>
-				
 			</el-form-item>
 
 			<el-form-item label="筛选用户" prop="type">
@@ -35,7 +36,6 @@
 					</el-form-item>
 					<el-button  class="button-new-tag" slot="reference" size="small">添加需要剔除的酒吧id</el-button>
 				</el-popover>
-				
 			</el-form-item>
 			
 			<el-form-item label="活动说明" prop="desc">
@@ -62,7 +62,6 @@
 		data() {
 			return {
 				barId:'',
-				// form:this.basic
 			}
 		},
 		methods: {
