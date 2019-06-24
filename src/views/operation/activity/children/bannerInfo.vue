@@ -55,11 +55,26 @@
 			bannerDefault:{
 				type:Object,
 				required:true
+			},
+			basic:{
+				type:Object,
+				required:true
 			}
 		},
 		methods:{
 			//增加banner
 			addBanner(){
+				if(!this.basic.id){
+					this.$message({
+					  message: '请先完善并提交基本配置',
+					  type: 'warning',
+					});
+					return
+				}else{
+					
+				}	
+					
+				console.log(this.basic.barid);
 				let obj = Object.assign({},this.bannerDefault);//复制一个对象
 				this.banner.push(obj);
 			},

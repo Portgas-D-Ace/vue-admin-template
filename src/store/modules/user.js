@@ -1,7 +1,8 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-
+import axios from 'axios'
+import qs from 'qs'
 const state = {
   token: getToken(),
   name: '',
@@ -24,51 +25,111 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
+		console.log(userInfo)
+		// axios.post('http://192.168.5.23:8079/login', qs.stringify(logObj)).then(response => {
+		// 	console.log(response);
+		// 	if(response.data.code == 200){
+		// 		setToken(response.data.data)
+		// 		setToken(response.data.data) //就后台返回的token存到cookie
+		// 		_this.commit('SET_TOKEN',response.data.data)
+		// 		_this.$router.push({ path: _this.redirect || '/' })	
+		// 		_this.loading = false
+		// 	}
+		// })
+		// .catch(function (error) {
+		// console.log(error);
+		// });
+		// 
+		// axios.post('http://192.168.5.23:8079/login', qs.stringify({ tel: tel.trim(), password: password })).then(response => {
+		//   const { data } = response
+		// 	console.log(data.data)
+		//   setToken(data.data) //就后台返回的token存到cookie
+		//   commit('SET_TOKEN', data.data)
+		// 	console.log(userInfo)
+		// }).catch(error => {
+		// 	console.log(error)
+		// })
+		// return
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      //login(qs.stringify({ tel: tel.trim(), password: password })).then(response => {
+			axios.post(process.env.VUE_APP_BASE_API+'/login', qs.stringify({ tel: username.trim(), password: password })).then(response => {
         const { data } = response
-        setToken(data.token) //就后台返回的token存到cookie
-        commit('SET_TOKEN', data.token)
-				console.log(userInfo)
+				console.log(data.data)
+        setToken(data.data) //就后台返回的token存到cookie
+        commit('SET_TOKEN', data.data)
         resolve()
       }).catch(error => {
         reject(error)
+				console.log(error)
       })
     })
   },
 
   // get user info
   getInfo({ commit, state }) {
+		
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
+			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/get',{
+				 headers: {
+           "token":state.token  //token换成从缓存获取
         }
-
-        const { name, avatar } = data
+			}).then(response => {
+			  const { data } = response
+			  console.log(response)
+				if (!data) {
+					reject('验证失败，请重新登录')
+				}
+				const { name, avatar } = data
 				console.log(data);
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
+				commit('SET_NAME', name)
+				commit('SET_AVATAR', avatar)
+				resolve(data)
+			}).catch(error => {
+			  reject(error)
+				console.log(error)
+			})
+//       getInfo(state.token).then(response => {
+//         const { data } = response
+// 
+//         if (!data) {
+//           reject('Verification failed, please Login again.')
+//         }
+// 
+//         const { name, avatar } = data
+// 				console.log(data);
+//         commit('SET_NAME', name)
+//         commit('SET_AVATAR', avatar)
+//         resolve(data)
+//       }).catch(error => {
+//         reject(error)
+//       })
     })
   },
 
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/logout',{
+				 headers: {
+			     "token":state.token  //token换成从缓存获取
+			  }
+			}).then(response => {
+			  commit('SET_TOKEN', '')
+			  removeToken()
+			  resetRouter()
+			  resolve()
+			}).catch(error => {
+			  reject(error)
+				console.log(error)
+			})
+      // logout(state.token).then(() => {
+      //   commit('SET_TOKEN', '')
+      //   removeToken()
+      //   resetRouter()
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
 
@@ -80,6 +141,7 @@ const actions = {
       resolve()
     })
   }
+	
 }
 
 export default {

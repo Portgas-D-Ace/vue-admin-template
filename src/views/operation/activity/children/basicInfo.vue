@@ -1,61 +1,56 @@
 <!-- 活动基本配置 -->
 <template>
 	<div>
-		<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+		<el-form :model="basic" label-width="120px">
 
-			<el-form-item label="活动ID" v-if="id">
+			<el-form-item label="活动ID" v-if="basic.id">
 				<el-col :span="6">
-					<el-input v-model="id" :disabled="true"></el-input>
+					<el-input v-model="basic.id" :disabled="true"></el-input>
 				</el-col>
 
 			</el-form-item>
 			
-			<el-form-item label="活动状态" v-if="id">
+			<el-form-item label="活动状态" v-if="basic.id">
 				<el-col :span="6">
-					<el-switch v-model="activeState.state" active-text="已开启" inactive-text="已关闭">
+					<el-switch v-model="basic.state" active-text="已开启" inactive-text="已关闭">
 					</el-switch>
 				</el-col>
 			</el-form-item>
 			
 			<el-form-item label="活动名称" required>
 				<el-col :span="12">
-					<el-input v-model="ruleForm.name"></el-input>
+					<el-input v-model="basic.name"></el-input>
 				</el-col>
 			</el-form-item>
 
 			<el-form-item label="活动时间" required>
 				<el-col :span="16">
-					<el-form-item prop="date1">
-						<el-date-picker :disabled="ruleForm.date2" v-model="ruleForm.date1" type="daterange" range-separator="至"
+					<el-form-item>
+						<el-date-picker v-model="basic.date1" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" @change="changeTimesFn"
 						 start-placeholder="开始日期" end-placeholder="结束日期" style="width: 75%;"></el-date-picker>
-						<el-checkbox v-model="ruleForm.date2">永久</el-checkbox>
 					</el-form-item>
 				</el-col>
 			</el-form-item>
-
-			<el-form-item label="筛选用户" prop="type">
-				<el-checkbox-group v-model="ruleForm.type">
-					<el-checkbox label="酒吧管理员" name="type"></el-checkbox>
-					<el-checkbox label="新用户" name="type"></el-checkbox>
-				</el-checkbox-group>
+			
+			<el-form-item label="筛选酒吧">
+				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.barids"></el-input>
 			</el-form-item>
-
-			<el-form-item label="剔除酒吧" prop="barTags">
-				<el-tag :key="tag" v-for="tag in ruleForm.barTags" closable :disable-transitions="false" @close="handleClose(tag)">
-					{{tag}}
-				</el-tag>
-				<el-popover placement="bottom-start" width="600" height="400" trigger="click">
-					<el-form-item label="">
-						<el-input type="textarea" v-model="barId" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"></el-input>
-					</el-form-item>
-					<el-button class="button-new-tag" slot="reference" size="small">添加需要剔除的酒吧id</el-button>
-				</el-popover>
+			
+			<el-form-item label="筛选用户">
+				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.users"></el-input>
 			</el-form-item>
-
-			<el-form-item label="活动说明" prop="desc">
-				<el-input type="textarea" v-model="ruleForm.desc"></el-input>
+			
+			<el-form-item label="活动剔除酒吧">
+				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nobaridsid"></el-input>
 			</el-form-item>
-
+			
+			<el-form-item label="活动剔除用户">
+				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nousers"></el-input>
+			</el-form-item>
+			
+			<el-form-item label="剔除酒吧管理员">
+				<el-switch v-model="basic.eliminateBarAdmin" @change="changeCheckBarAdminFn"  inactive-text="未剔除" active-text="已剔除"></el-switch>
+			</el-form-item>
 		</el-form>
 	</div>
 </template>
@@ -64,54 +59,31 @@
 	export default {
 		name: 'basicInfo',
 		props: {
-			id: {
-				type: String,
-				required: true
-			},
-			activeState: {
-				type: Object,
-				required: true
-			},
-			ruleForm: {
-				type: Object,
-				required: true
-			},
-			rules: {
+			basic: {
 				type: Object,
 				required: true
 			}
 		},
-		data() {
-			return {
-				barId: '',
-			}
-		},
-		methods: {
-			//删除 添加的酒吧id
-			handleClose(tag) {
-				this.ruleForm.barTags.splice(this.ruleForm.barTags.indexOf(tag), 1);
-			},
-			//添加酒吧id
-			handleInputConfirm() {
-				let idStr = this.barId.replace(/\s*/g, ""); //获取输入的酒吧id字符串--并去除所有空格
-				if (!idStr) return;
-				let idList = idStr.split(','); //分割成数组
-				idList = Array.from(new Set(idList)); //数组去重
-				for (let i = 0; i < idList.length; i++) {
-					let inputValue = idList[i];
-					if (!inputValue) return
-					if (this.ruleForm.barTags.includes(inputValue)) {
-						// 酒吧id 已存在 
-						// this.$message({
-						// 	message: '已添加的酒吧id',
-						// 	type: 'error'
-						// });
-					} else {
-						// 添加到酒吧id-tags
-						this.ruleForm.barTags.push(inputValue);
-					}
+		methods:{
+			//选择活动时间
+			changeTimesFn(t){
+				console.log(t);
+				if(t){
+					this.basic.starttime =	t[0];
+					this.basic.endtime = 	t[1];
+				}else{
+					this.basic.starttime =	'';
+					this.basic.endtime = 	'';
 				}
-				this.barId = '';
+			},
+			//是否剔除活动管理员
+			changeCheckBarAdminFn(s){
+				console.log(s);
+				if(s){
+					this.basic.baradminid = 1;
+				}else{
+					this.basic.baradminid = 0;
+				}
 			}
 		}
 	}
