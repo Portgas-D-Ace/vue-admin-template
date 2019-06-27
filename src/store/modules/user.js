@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs'
 const state = {
@@ -8,6 +9,7 @@ const state = {
   name: '',
   avatar: ''
 }
+let vm = new Vue();
 
 const mutations = {
   SET_TOKEN: (state, token) => {
@@ -61,6 +63,10 @@ const actions = {
       }).catch(error => {
         reject(error)
 				console.log(error)
+				vm.$alert('网络错误','提示',{
+					type:'error',
+					center:true
+				});
       })
     })
   },

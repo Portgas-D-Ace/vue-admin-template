@@ -3,7 +3,7 @@
 	<div>
 		<div align="right">
 			<el-col :span="18">
-				<el-button type="primary" @click="addBanner" v-if="!banner.length">新增Banner</el-button>
+				<el-button type="primary" @click="addBannerFn" v-if="!banner.length">新增Banner</el-button>
 			</el-col>
 		</div>
 		<el-form class="demo-form" v-for="(item, index) in banner" :model="item" label-width="100px" :key="index">
@@ -12,24 +12,23 @@
 					<el-upload
 						class="banner-uploader"
 						:auto-upload="false"
-						:action="actionUrl"
+						:action="''"
 						:show-file-list="false"
-						:on-success="(res, file) => {return handleBannerSuccess(res, file, index);}"
 						:on-change="file => {return previewBannerUpload(file, index);}"
-						:before-upload="file => {return beforeBannerUpload(file, index);}"
 					>
 						<img v-if="item.img" :src="item.img" class="banner" />
 						<i v-else class="el-icon-plus banner-uploader-icon"></i>
 					</el-upload>
 				</el-col>
 				<el-col :span="8" align="right">
-					<el-button type="primary" @click="addBanner" v-if="index == banner.length-1">新增Banner</el-button>
-					<el-button type="primary" @click="removeBanner(index)" v-if="banner.length>0">删除</el-button>
+					<el-button type="primary" @click="submitBannerFn(index)" v-if="banner.length>0">提交</el-button>
+					<el-button type="danger" @click="removeBannerFn(index)" v-if="banner.length>0">删除</el-button>
+					<el-button type="primary" @click="addBannerFn" v-if="index == banner.length-1 && banner.length<2">新增Banner</el-button>
 				</el-col>
 			</el-form-item>
 			
 			<el-form-item label="展示顺序" required>
-				<el-col :span="4"><el-input v-model="item.order" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
+				<el-col :span="4"><el-input v-model="item.sort" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
 			</el-form-item>
 			
 			<el-form-item label="跳转连接" required>
@@ -44,10 +43,6 @@
 	export default {
 		name:'bannerInfo',
 		props:{
-			actionUrl:{
-				type:String,
-				required:true
-			},	
 			banner:{
 				type:Array,
 				required:true,
@@ -59,63 +54,162 @@
 			basic:{
 				type:Object,
 				required:true
+			},
+			requestFn:{
+				type:Function,
+			}
+		},
+		data(){
+			return{
+				uploadState:true
 			}
 		},
 		methods:{
 			//增加banner
-			addBanner(){
+			addBannerFn(){
 				if(!this.basic.id){
+					//未提交基本配置
 					this.$message({
 					  message: '请先完善并提交基本配置',
 					  type: 'warning',
 					});
 					return
 				}else{
-					
+					//已有2张banner
+					if(this.banner.length>2) {
+						this.$message({
+						  message: 'banner配置最多可以添加2条',
+						  type: 'warning',
+						});
+						return
+					}
+					//添加一个新的banner对象
+					let obj = Object.assign({},this.bannerDefault);//复制一个对象
+					this.banner.push(obj);
 				}	
+			},
+			//提交banner
+			submitBannerFn(i){
+				if(!this.uploadState){
+					this.$message({
+					  message: 'banner-图片正在上传',
+					  type: 'error',
+					});
+					return
+				}
+				if(!this.banner[i].url || !this.banner[i].sort || !this.banner[i].img){
 					
-				console.log(this.basic.barid);
-				let obj = Object.assign({},this.bannerDefault);//复制一个对象
-				this.banner.push(obj);
-			},
+					this.$message({
+					  message: '请先完善需提交的banner配置信息',
+					  type: 'error',
+					});
+					return
+				}
+				//获取提交 banner配置信息
+				let bannerid = this.banner[i].id;
+				let obj = Object.assign({type:2,aid:this.basic.id},this.banner[i]);
+				console.log(obj);
+				//设置提交url
+				let $url = '/admin/activityitem/add';
+				if(bannerid){
+					$url = '/admin/activityitem/update';
+				}
+				//提交此条banner配置信息
+				this.requestFn($url,obj,response =>{
+					console.log(response)
+					let res = response.data;
+					if(res.code == 500){
+						if(!bannerid){
+							this.banner[i].id = res.data;
+						}
+						this.$message({
+						  message: res.msg,
+						  type: 'success',
+						});
+					}else{
+						this.$message({
+						  message: res.msg,
+						  type: 'error',
+						});
+					}
+					this.listLoading = false
+				},error =>{
+					this.listLoading = false
+					console.log(error)
+				});
+			},	
 			//删除banner
-			removeBanner(i){
-				this.banner.splice(i,1);
-			},
-			//图片上传成功后执行
-			handleBannerSuccess(res, file, i) {
-				console.log(i);
-				console.log(this.banner[i]);
-				console.log(file);
-				return;
-				this.banner[i].img = URL.createObjectURL(file.raw);
+			removeBannerFn(i){
+				//获取bannerid 是否存在
+				let bannerid = this.banner[i].id;
+				if(bannerid){
+					//发起删除请求
+					this.requestFn('/admin/activityitem/del',{id:bannerid},response =>{
+						console.log(response)
+						let res = response.data;
+						if(res.code == 500){
+							//删除本地 banner配置信息
+							this.banner.splice(i,1);
+							this.$message({
+							  message: "已删除",
+							  type: 'success',
+							});
+						}else{
+							this.$message({
+							  message: res.msg,
+							  type: 'error',
+							});
+						}
+						this.listLoading = false
+					},error =>{
+						this.listLoading = false
+						console.log(error)
+					});
+				}else{
+					//删除本地 banner配置信息
+					this.banner.splice(i,1);
+				}	
 			},
 			//图片选择后执行
 			previewBannerUpload(file, i) {
-				console.log(i);
-				console.log(this.banner[i]);
-				console.log(file);
+				this.uploadState = false;
+				const isImage = file.raw.type.includes('image');
+				const isLt5M = file.size / 1024 / 1024 < 5;
+				if (!isImage) {
+					this.$message.error('上传图片格式错误!');
+				}
+				if (!isLt5M) {
+					this.$message.error('上传文件大小不能超过 5MB!');
+				}
+				if(!isImage || !isLt5M)return;
 				this.banner[i].img = URL.createObjectURL(file.raw);
+				//发起上传请求
+				let formData=new FormData();
+                formData.append('file',file.raw);
+                let files = formData;
+				this.requestFn('/upload/uploadPhoneImg',files,response =>{
+					console.log(response)
+					let res = response.data;
+					if(res.code == 500){
+						this.banner[i].img = res.data;
+						this.$message({
+						  message: '图片已上传完成',
+						  type: 'success',
+						});
+					}else{
+						this.$message({
+						  message: res.msg,
+						  type: 'error',
+						});
+					}
+					this.uploadState = true
+					this.listLoading = false
+				},error =>{
+					this.uploadState = true
+					this.listLoading = false
+					console.log(error)
+				});
 			},
-			beforeBannerUpload(file, i) {
-				console.log(i);
-				console.log(thisbanner[i]);
-				console.log(file);
-				//console.log(URL.createObjectURL(file));
-				//this.item.img = URL.createObjectURL(file.raw);
-				return;
-			
-				const isJPG = file.type === 'image/jpeg';
-				const isLt2M = file.size / 1024 / 1024 < 2;
-			
-				if (!isJPG) {
-					this.$message.error('上传头像图片只能是 JPG 格式!');
-				}
-				if (!isLt2M) {
-					this.$message.error('上传头像图片大小不能超过 2MB!');
-				}
-				return isJPG && isLt2M;
-			}
 		}
 	}
 </script>

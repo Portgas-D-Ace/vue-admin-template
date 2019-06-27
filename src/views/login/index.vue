@@ -95,6 +95,14 @@ export default {
       immediate: true
     }
   },
+	created() {
+		
+	},
+	mounted() {
+		let w = window.devicePixelRatio;
+		let obj = document.getElementById('app');
+		obj.style.zoom = 0.97/w;
+	},
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {

@@ -43,64 +43,68 @@
 		},
 		data() {
 			return {
-				actionUrl:'https://jsonplaceholder.typicode.com/posts/',
+				actionUrl: process.env.VUE_APP_BASE_API+'/upload/uploadPhoneImg',
 				activeName: 'first',
 				loading:false,
 				//基本数据
 				basic:{
-					id:'',		//活动id
-					state:1,	//活动状态	0：下线；1：上线
-					isdel:0,	//0未删除 	1删除
-					name: '',	//活动名称
+					id:'',			//活动id
+					state:1,		//活动状态	0：下线；1：上线
+					isdel:0,		//0未删除 	1删除
+					name: '',		//活动名称
 					starttime:'',	//活动开始时间
 					endtime:'',		//活动结束时间
 					barids:'',		//筛选酒吧id列表		string 用英文 ; 隔开
 					users:'',		//筛选用户id列表		string 用英文 ; 隔开
-					nobaridsid:'',	//剔除酒吧id列表		string 用英文 ; 隔开
+					nobarids:'',	//剔除酒吧id列表		string 用英文 ; 隔开
 					nousers:'',		//剔除用户id列表		string 用英文 ; 隔开
 					baradminid:0,	//是否剔除酒吧管理员	0未剔除 	1剔除
-					date1: [],	//活动时间 array[0] 开始时间 array[1] 结束时间
-					eliminateBarAdmin: false,//是否剔除酒吧管理员 默认 boolean  false
+					date1: [],		//活动时间 array[0] 开始时间 array[1] 结束时间
 				},
 				//banner默认数据
 				bannerDefault:{
-						order:'',//banner顺序
-						url:'',	//跳转地址
-						img:'',	//弹窗图片链接
+					id:'',
+					sort:'',//banner顺序
+					url:'',	//跳转地址
+					img:'',	//弹窗图片链接
 				},
 				//banner数据
 				banner:[],
 				//弹窗默认数据
 				popDefault:{
-					// 	order:'',//弹窗展示顺序
-					// 	url:'',	//跳转地址
-					// 	img:'',	//弹窗图片链接
-					// 	type:1,	//每天首次登录展示：1  登录即展示：2
-					// 	times:10,//展示时长
+					id:'',
+					sort:'',//弹窗展示顺序
+					url:'',	//跳转地址
+					img:'',	//弹窗图片链接
+					logic:0,	//每天首次登录展示：0  登录即展示：1
+					nums:10,//展示时长
 				},
 				//弹窗数据
 				pop:[],
 				//信息流默认数据
 				msgFlowDefault:{
-					order:'',//信息流展示顺序
-					url:'',//跳转地址
-					info:'',//信息流文案
-					img:'',//信息流展示图片链接 --可不传
-					type:1,//每天首次登录展示：1  登录即展示：2
-					pushType:false,	// 是否开启定点推送
-					pushList:[],//推送的时间点
-					barPushType:false,//是否开启大屏推送
+					id:'',
+					sort: '', //信息流展示顺序
+					url: '', //跳转地址
+					text: '', //信息流文案
+					img: '', //信息流展示图片链接 --可不传
+					logic: 1, //每天首次登录展示：1  登录即展示：2  每天首次登录展示and定点：3  登录即展示and定点： 4
+					pushType: 0, // 是否开启定点推送
+					pushList: [], //推送的时间点
+					bigscreen:0,//是否开启大屏推送 0 不开启 	1开启
+					barPushType: false, //是否开启大屏推送
 				},
 				//信息流数据
 				msgFlow:[],
 				//大屏官方动画默认数据
 				bigScreenDefault:{
-						urlType:1,//1 :img 2:video
-						url:'',//图片或者视频链接
-						times:'',//默认的展示时长
-						type:false,//是否开屏就展示
-						pushType:false,	// 是否开启定点推送
-						pushList:[],//推送的时间点
+					id:'',
+					urltype: 0, //0 :img 1:video
+					img: '', //图片或者视频链img
+					nums: 10, //默认的展示时长
+					logic: 1, //关闭开屏展示：1  开启开屏展示：2  关闭开屏展示and定点：3  开启开屏展示and定点： 4
+					pushType: 0, // 是否开启定点推送
+					pushList: [], //推送的时间点
 				},
 				//大屏动画数据
 				bigScreen:[]

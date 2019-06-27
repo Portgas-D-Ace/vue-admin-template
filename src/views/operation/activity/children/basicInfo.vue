@@ -4,16 +4,18 @@
 		<el-form :model="basic" label-width="120px">
 
 			<el-form-item label="活动ID" v-if="basic.id">
-				<el-col :span="6">
+				<el-col :span="12">
 					<el-input v-model="basic.id" :disabled="true"></el-input>
 				</el-col>
 
 			</el-form-item>
 			
 			<el-form-item label="活动状态" v-if="basic.id">
-				<el-col :span="6">
-					<el-switch v-model="basic.state" active-text="已开启" inactive-text="已关闭">
-					</el-switch>
+				<el-col :span="12">
+					<el-radio-group v-model="basic.state">
+						<el-radio :label="1">开启</el-radio>
+						<el-radio :label="0">关闭</el-radio>
+					</el-radio-group>
 				</el-col>
 			</el-form-item>
 			
@@ -41,7 +43,7 @@
 			</el-form-item>
 			
 			<el-form-item label="活动剔除酒吧">
-				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nobaridsid"></el-input>
+				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nobarids"></el-input>
 			</el-form-item>
 			
 			<el-form-item label="活动剔除用户">
@@ -49,7 +51,10 @@
 			</el-form-item>
 			
 			<el-form-item label="剔除酒吧管理员">
-				<el-switch v-model="basic.eliminateBarAdmin" @change="changeCheckBarAdminFn"  inactive-text="未剔除" active-text="已剔除"></el-switch>
+				<el-radio-group v-model="basic.baradminid">
+					<el-radio :label="0">不剔除</el-radio>
+					<el-radio :label="1">剔除</el-radio>
+				</el-radio-group>
 			</el-form-item>
 		</el-form>
 	</div>

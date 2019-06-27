@@ -30,8 +30,7 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
-
-new Vue({
+let vm = new Vue({
   el: '#app',
   router,
   store,
