@@ -54,13 +54,14 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      // if (!validUsername(value)) {
+      if (!value) {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
@@ -118,9 +119,18 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login',this.loginForm).then(() => {
+          this.$store.dispatch('user/login',this.loginForm).then((res) => {
+						console.log(res);
+						this.loading = false
+						if(res.code != 200){
+							this.$message({
+							  message: '账号或密码错误',
+							  type: 'error',
+							});
+							return
+						}						
             this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
+            
           }).catch(() => {
             this.loading = false
           })

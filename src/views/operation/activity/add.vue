@@ -6,23 +6,23 @@
 			</el-tab-pane>
 			
 			<el-tab-pane label="banner配置" name="second">
-					<bannerinfo :banner="banner" :bannerDefault="bannerDefault" :actionUrl="actionUrl" :basic="basic"></bannerinfo>
+					<bannerinfo :banner="banner" :bannerDefault="bannerDefault" :basic="basic" :requestFn="requestFn"></bannerinfo>
 			</el-tab-pane>
 			
 			<el-tab-pane label="弹窗配置" name="third">
-					<popinfo :pop="pop" :popDefault="popDefault" :actionUrl="actionUrl" :basic="basic"></popinfo>
+					<popinfo :pop="pop" :popDefault="popDefault" :basic="basic" :requestFn="requestFn"></popinfo>
 			</el-tab-pane>
 			
 			<el-tab-pane label="信息流配置" name="fourth">
-					<msgflowinfo :msgFlow="msgFlow" :msgFlowDefault="msgFlowDefault" :actionUrl="actionUrl" :basic="basic"></msgflowinfo>
+					<msgflowinfo :msgFlow="msgFlow" :msgFlowDefault="msgFlowDefault" :basic="basic" :requestFn="requestFn"></msgflowinfo>
 			</el-tab-pane>
 			
 			<el-tab-pane label="大屏动画配置" name="fifth">
-					<bigscreeninfo :bigScreen="bigScreen" :bigScreenDefault="bigScreenDefault" :actionUrl="actionUrl" :basic="basic"></bigscreeninfo>
+					<bigscreeninfo :bigScreen="bigScreen" :bigScreenDefault="bigScreenDefault" :basic="basic" :requestFn="requestFn"></bigscreeninfo>
 			</el-tab-pane>
 			
 		</el-tabs>
-		<div class="btn-box">
+		<div class="btn-box" v-if="activeName== 'first'">
 			<el-button type="primary" @click="submitForm">立即创建</el-button>
 			<el-button @click="backGo">返回</el-button>
 		</div>
@@ -113,9 +113,8 @@
 		methods: {
 			//提交活动基本配置
 			submitForm() {
-				this.listLoading = true;
+				//获取提交配置信息
 				let obj = Object.assign({},this.basic);
-				obj.state = obj.state ? 1:0;
 				if(!obj.name || !obj.starttime || !obj.endtime){
 					this.$message({
 					  message: '请先完善基本配置',
@@ -123,11 +122,19 @@
 					});
 					return;
 				}
-				this.requestFn('/admin/activity/add',obj,response =>{
+				//提交地址
+				let $url = '/admin/activity/add';
+				if(this.basic.id){
+					$url = '/admin/activity/update';
+				}
+				this.listLoading = true;
+				this.requestFn($url,obj,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
-						this.basic.id = res.data;
+					if(res.code == 200){
+						if(!this.basic.id){
+							this.basic.id = res.data;
+						}
 						console.log(this.basic.id)
 						this.$message({
 						  message: res.msg,
@@ -165,7 +172,7 @@
 						console.log(error)
 					})
 				})
-			}
+			},
 		}
 	};
 </script>

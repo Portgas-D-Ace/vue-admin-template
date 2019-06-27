@@ -35,19 +35,19 @@
 			</el-form-item>
 			
 			<el-form-item label="筛选酒吧">
-				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.barids"></el-input>
+				<el-input type="textarea" placeholder="id 请用空格隔开" autosize v-model="basic.barids"></el-input>
 			</el-form-item>
 			
 			<el-form-item label="筛选用户">
-				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.users"></el-input>
+				<el-input type="textarea" placeholder="id 请用空格隔开" autosize v-model="basic.users"></el-input>
 			</el-form-item>
 			
 			<el-form-item label="活动剔除酒吧">
-				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nobarids"></el-input>
+				<el-input type="textarea" placeholder="id 请用空格隔开" autosize v-model="basic.nobarids"></el-input>
 			</el-form-item>
 			
 			<el-form-item label="活动剔除用户">
-				<el-input type="textarea" placeholder="id 请用英文 ; 隔开" autosize v-model="basic.nousers"></el-input>
+				<el-input type="textarea" placeholder="id 请用空格隔开" autosize v-model="basic.nousers"></el-input>
 			</el-form-item>
 			
 			<el-form-item label="剔除酒吧管理员">
@@ -89,7 +89,7 @@
 				}else{
 					this.basic.baradminid = 0;
 				}
-			}
+			},
 		}
 	}
 </script>

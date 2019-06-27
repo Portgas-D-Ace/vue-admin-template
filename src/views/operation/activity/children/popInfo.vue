@@ -8,7 +8,7 @@
 		</div>
 		<el-form class="demo-form" v-for="(item, index) in pop" :model="item" ref="ruleForm" label-width="100px" :key="index">
 			<el-form-item label="展示顺序" required>
-				<el-col :span="4"><el-input v-model="item.sort" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
+				<el-col :span="4"><el-input v-model="item.sort"  @input="checkSortValue(index)" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
 				<el-col :span="14" align="right">
 					<el-button type="primary" @click="submitPopFn(index)" v-if="pop.length>0">提交</el-button>
 					<el-button type="danger" @click="removePopFn(index)" v-if="pop.length>0">删除</el-button>
@@ -28,7 +28,7 @@
 			</el-form-item>
 		
 			<el-form-item label="展示时长" required>
-				<el-col :span="3"><el-input v-model="item.nums" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
+				<el-col :span="3"><el-input v-model="item.nums" @input="checkNumsValue(index)" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
 				<el-col :span="1" align="left"><span style="padding-left: 8px;">秒</span></el-col>
 			</el-form-item>
 			<el-form-item label="上传图片" required>
@@ -126,7 +126,7 @@ export default {
 			this.requestFn($url,obj,response =>{
 				console.log(response)
 				let res = response.data;
-				if(res.code == 500){
+				if(res.code == 200){
 					if(!popid){
 						this.pop[i].id = res.data;
 					}
@@ -155,7 +155,7 @@ export default {
 				this.requestFn('/admin/activityitem/del',{id:popid},response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						//删除本地 pop配置信息
 						this.pop.splice(i,1);
 						this.$message({
@@ -198,7 +198,7 @@ export default {
 			this.requestFn('/upload/uploadPhoneImg',files,response =>{
 				console.log(response)
 				let res = response.data;
-				if(res.code == 500){
+				if(res.code == 200){
 					this.pop[i].img = res.data;
 				}else{
 					
@@ -211,6 +211,16 @@ export default {
 				console.log(error)
 			});
 		},
+		//检测输入展示位置的 value
+		checkSortValue(i){
+			this.pop[i].sort = this.pop[i].sort.replace(/\D/g,'');
+			if(this.pop[i].sort >100)this.pop[i].sort=100
+		},
+		//检测输入展示位置的 value
+		checkNumsValue(i){
+			this.pop[i].nums = this.pop[i].nums.replace(/\D/g,'');
+			if(this.pop[i].nums >100)this.pop[i].nums=100
+		}
 	}
 };
 </script>

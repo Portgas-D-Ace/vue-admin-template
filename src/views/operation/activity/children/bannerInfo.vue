@@ -28,7 +28,7 @@
 			</el-form-item>
 			
 			<el-form-item label="展示顺序" required>
-				<el-col :span="4"><el-input v-model="item.sort" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
+				<el-col :span="4"><el-input v-model="item.sort" @input="checkSortValue(index)" placeholder="输入1-100整数" maxlength="3"></el-input></el-col>
 			</el-form-item>
 			
 			<el-form-item label="跳转连接" required>
@@ -118,7 +118,7 @@
 				this.requestFn($url,obj,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						if(!bannerid){
 							this.banner[i].id = res.data;
 						}
@@ -147,7 +147,7 @@
 					this.requestFn('/admin/activityitem/del',{id:bannerid},response =>{
 						console.log(response)
 						let res = response.data;
-						if(res.code == 500){
+						if(res.code == 200){
 							//删除本地 banner配置信息
 							this.banner.splice(i,1);
 							this.$message({
@@ -190,7 +190,7 @@
 				this.requestFn('/upload/uploadPhoneImg',files,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						this.banner[i].img = res.data;
 						this.$message({
 						  message: '图片已上传完成',
@@ -210,6 +210,11 @@
 					console.log(error)
 				});
 			},
+			//检测输入展示位置的 value
+			checkSortValue(i){
+				this.banner[i].sort = this.banner[i].sort.replace(/\D/g,'');
+				if(this.banner[i].sort >100)this.banner[i].sort=100
+			}
 		}
 	}
 </script>

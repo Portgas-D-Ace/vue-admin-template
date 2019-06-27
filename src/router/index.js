@@ -33,6 +33,7 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
+	name:'login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
@@ -92,15 +93,9 @@ export const constantRoutes = [
 				]
 			},
 			{
-				path: 'add',
-				name: 'add',
-				hidden: true,
-				component: () => import('@/views/operation/activity/add'),
-				meta: { title: '添加新活动'},
-			},
-			{
 				path:'statistics',
 				name:'statistics',
+				hidden: true,
 				component: () => import('@/views/operation/statistics/index'),
 				meta: { title: '数据统计', icon: 'table' }
 			}

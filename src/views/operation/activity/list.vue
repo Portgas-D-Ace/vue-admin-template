@@ -5,7 +5,7 @@
 			<div class="search-box">
 				<el-form class="page-search-box" ref="form" :model="form" label-width="70px">
 					<el-form-item label="关键字">
-						<el-input v-model="form.searchValue" :placeholder="form.placeholder" @keyup.enter.native="fetchData">
+						<el-input v-model="form.searchValue" :placeholder="form.placeholder" @keyup.enter.native="searchList">
 						</el-input>
 					</el-form-item>
 				</el-form>
@@ -22,7 +22,7 @@
 			:header-cell-style="{'background-color':'rgba(238,241,246,0.5)',color:'#606266','text-align':'center',padding:'10px 0'}"
 			border fit highlight-current-row
 			>
-				<el-table-column align="center" label="ID" width="195">
+				<el-table-column align="center" label="ID" width="300">
 					<template slot-scope="scope">
 						{{ scope.row.id }}
 					</template>
@@ -106,9 +106,10 @@
 				},
 				//数据列表数据
 				list: [],
+				allList:[],
 				listLoading: true,
 				currentPage: 1, //初始页
-				pagesize: 8,
+				pagesize: 10,
 				count:0,
 				val: false,
 				//弹窗状态
@@ -121,6 +122,13 @@
 			console.log('mock:',process.env.VUE_APP_BASE_API);
 		},
 		methods: {
+			//搜索列表数据
+			searchList(){
+				let val = this.form.searchValue;
+				this.list= this.allList.filter( item => item.name && item.name.includes(val));
+				this.count = this.list.length;
+				this.val = (this.count / this.pagesize) > 1 ? true : false
+			},
 			//请求列表数据
 			fetchData() {
 				this.listLoading = true
@@ -128,16 +136,23 @@
 				let size = this.pagesize;
 				let name = this.form.searchValue;
 				return new Promise((resolve, reject) => {
-					axios.post(process.env.VUE_APP_BASE_API+'/admin/activity/list',{name:name,page:page,size:size},{
+					axios.post(process.env.VUE_APP_BASE_API+'/admin/activity/list',{},{
 						headers: {
 							"token":getToken()  //token换成从缓存获取
 						}
 					}).then(response => {
-						console.log(response)
 						let res = response.data;
-						if(res.code == 500){
+						console.log(res)
+						if(res.code == 200){
 							this.list = res.data.list;
-							this.count = res.data.count;
+							this.allList = res.data.list;
+							this.allList.forEach(function(v,k){
+								if(v.name == null){
+									v.name ='';
+								}
+							})
+							console.log(this.allList);
+							this.count = this.list.length;
 							this.val = (this.count / this.pagesize) > 1 ? true : false
 						}
 						this.listLoading = false
@@ -175,7 +190,7 @@
 						}
 					}).then(response => {
 						console.log(response)
-						if(response.data.code == 500){
+						if(response.data.code == 200){
 							this.list = this.list.filter(todo => todo.id !== this.deleteId)
 							this.centerDialogVisible = false
 							this.deleteId = '';

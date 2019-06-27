@@ -13,15 +13,15 @@
 				</el-tab-pane>
 
 				<el-tab-pane label="弹窗配置" name="third">
-					<popinfo :pop="pop" :popDefault="popDefault" :basic="basic" :requestFn="requestFn"></popinfo>
+					<popinfo :pop="pop" :popDefault="popDefault" :basic="basic" :requestFn="requestFn" ></popinfo>
 				</el-tab-pane>
 
 				<el-tab-pane label="信息流配置" name="fourth">
-					<msgflowinfo :msgFlow="msgFlow" :msgFlowDefault="msgFlowDefault" :actionUrl="actionUrl" :basic="basic" :requestFn="requestFn"></msgflowinfo>
+					<msgflowinfo :msgFlow="msgFlow" :msgFlowDefault="msgFlowDefault" :basic="basic" :requestFn="requestFn"></msgflowinfo>
 				</el-tab-pane>
 
 				<el-tab-pane label="大屏动画配置" name="fifth">
-					<bigscreeninfo :bigScreen="bigScreen" :bigScreenDefault="bigScreenDefault" :actionUrl="actionUrl" :basic="basic" :requestFn="requestFn"></bigscreeninfo>
+					<bigscreeninfo :bigScreen="bigScreen" :bigScreenDefault="bigScreenDefault" :basic="basic" :requestFn="requestFn"></bigscreeninfo>
 				</el-tab-pane>
 
 			</el-tabs>
@@ -83,6 +83,7 @@
 				banner: [],
 				//弹窗默认数据
 				popDefault: {
+					id:'',
 					sort:'',//弹窗展示顺序
 					url:'',	//跳转地址
 					img:'',	//弹窗图片链接
@@ -130,14 +131,14 @@
 			//获取活动基本配置
 			this.requestFn('/admin/activity/get',{id:this.id},response=>{
 				let res = response.data;
-				if(res.code == 500){
+				if(res.code == 200){
+					console.log('res:',res);
 					res.data.date1 = [res.data.starttime,res.data.endtime]
 					this.basic = {...res.data}
 					let itemVo = res.data.itemVo;
 					if(itemVo.length>0){
 						this.initData(itemVo)
 					}	
-					console.log(this.basic)
 				}else{
 					
 				}
@@ -149,10 +150,8 @@
 		methods: {
 			//提交基本配置
 			submitForm() {
-				let _this = this;
-				this.listLoading = true;
+				//获取提交配置信息
 				let obj = Object.assign({},this.basic);
-				obj.state = obj.state ? 1:0;
 				if(!obj.name || !obj.starttime || !obj.endtime){
 					this.$message({
 					  message: '请先完善基本配置',
@@ -160,10 +159,11 @@
 					});
 					return;
 				}
+				this.listLoading = true;
 				this.requestFn('/admin/activity/update',obj,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						this.$message({
 						  message: res.msg,
 						  type: 'success',
@@ -195,16 +195,20 @@
 				this.pop = list.filter( item => item.type == 1);
 				//信息流配置信息
 				this.msgFlow = list.filter( item => item.type == 3);
-				for(let i =0;i<this.msgFlow.length ; i++){
-					let obj = this.msgFlow[i]
+				console.log(this.msgFlow)
+				for(let k =0; k < this.msgFlow.length; k++){
+					let obj = this.msgFlow[k]
 					if(obj.logic>2){
 						obj.logic -= 2;
 						obj.pushType = 2;
 					}
 					if(obj.times){
 						obj.pushList =obj.times.split(',');
+					}else{
+						obj.pushList = [];
 					}
 				}
+				//大屏动画配置信息
 				this.bigScreen = list.filter( item => item.type == 4);
 				for(let i =0;i<this.bigScreen.length ; i++){
 					let obj = this.bigScreen[i]	
@@ -214,6 +218,8 @@
 					}
 					if(obj.times){
 						obj.pushList =obj.times.split(',');
+					}else{
+						obj.pushList = [];
 					}
 				}
 			},	
@@ -233,7 +239,6 @@
 					})
 				})
 			},
-			//
 		}
 	}
 </script>

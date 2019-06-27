@@ -30,7 +30,7 @@
 			
 			
 			<el-form-item label="展示时长" required>
-				<el-col :span="5"><el-input v-model="item.nums" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
+				<el-col :span="5"><el-input v-model="item.nums" @input="checkNumsValue(index)" placeholder="输入展示时长 **s" maxlength="3"></el-input></el-col>
 				<el-col :span="1" align="left"><span style="padding-left: 8px;">秒</span></el-col>
 			</el-form-item>
 			
@@ -151,7 +151,7 @@
 				this.requestFn($url,obj,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						if(!bigScreenId){
 							this.bigScreen[i].id = res.data;
 						}
@@ -180,7 +180,7 @@
 					this.requestFn('/admin/activityitem/del',{id:bigScreenid},response =>{
 						console.log(response)
 						let res = response.data;
-						if(res.code == 500){
+						if(res.code == 200){
 							//删除本地 信息流配置信息
 							this.bigScreen.splice(i,1);
 							this.$message({
@@ -234,7 +234,7 @@
 				this.requestFn('/upload/uploadPhoneImg',files,response =>{
 					console.log(response)
 					let res = response.data;
-					if(res.code == 500){
+					if(res.code == 200){
 						this.bigScreen[i].img = res.data;
 					}else{
 						
@@ -254,6 +254,7 @@
 			},
 			//添加推送时间点
 			handleInputConfirm(i) {
+				let reg = /^(([0-1]?\d)|(2[0-4])):[0-5]?\d$/;
 				let idStr =  this.pushTime.replace(/\s*/g,"");//获取输入的时间点id字符串--并去除所有空格
 				if(!idStr)return;	
 				let idList = idStr.split(',');				//分割成数组
@@ -262,17 +263,20 @@
 					let inputValue = idList[k];
 					if(!inputValue)return
 					if (this.bigScreen[i].pushList.includes(inputValue)) {
-						// 酒吧id 已存在 
-						// this.$message({
-						// 	message: '已添加的酒吧id',
-						// 	type: 'error'
-						// });
+						// 时间点 已存在 
 					} else {
-						// 添加到酒吧id-tags
-						this.bigScreen[i].pushList.push(inputValue);
+						// 添加到 时间点-tags
+						if(reg.test(inputValue)){
+							this.bigScreen[i].pushList.push(inputValue);
+						}
 					}
 				}
 				this.pushTime = '';
+			},
+			//检测输入展示位置的 value
+			checkNumsValue(i){
+				this.bigScreen[i].nums = this.bigScreen[i].nums.replace(/\D/g,'');
+				if(this.bigScreen[i].nums >100)this.bigScreen[i].nums=100
 			}
 		}
 	}

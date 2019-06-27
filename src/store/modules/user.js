@@ -56,10 +56,12 @@ const actions = {
       //login(qs.stringify({ tel: tel.trim(), password: password })).then(response => {
 			axios.post(process.env.VUE_APP_BASE_API+'/login', qs.stringify({ tel: username.trim(), password: password })).then(response => {
         const { data } = response
-				console.log(data.data)
-        setToken(data.data) //就后台返回的token存到cookie
-        commit('SET_TOKEN', data.data)
-        resolve()
+				console.log(data)
+				if(data.code == 200){
+					setToken(data.data.token) 				//就后台返回的token存到cookie
+					commit('SET_TOKEN', data.data.token)
+				}
+				resolve(data)
       }).catch(error => {
         reject(error)
 				console.log(error)
@@ -74,8 +76,9 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
 		
+		// return
     return new Promise((resolve, reject) => {
-			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/get',{
+			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/get',{},{
 				 headers: {
            "token":state.token  //token换成从缓存获取
         }
@@ -85,41 +88,25 @@ const actions = {
 				if (!data) {
 					reject('验证失败，请重新登录')
 				}
-				const { name, avatar } = data
 				console.log(data);
-				commit('SET_NAME', name)
-				commit('SET_AVATAR', avatar)
+				commit('SET_NAME', data.data.barName)
 				resolve(data)
 			}).catch(error => {
 			  reject(error)
 				console.log(error)
 			})
-//       getInfo(state.token).then(response => {
-//         const { data } = response
-// 
-//         if (!data) {
-//           reject('Verification failed, please Login again.')
-//         }
-// 
-//         const { name, avatar } = data
-// 				console.log(data);
-//         commit('SET_NAME', name)
-//         commit('SET_AVATAR', avatar)
-//         resolve(data)
-//       }).catch(error => {
-//         reject(error)
-//       })
     })
   },
 
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/logout',{
+			axios.post(process.env.VUE_APP_BASE_API+'/admin/user/logout',{},{
 				 headers: {
 			     "token":state.token  //token换成从缓存获取
 			  }
 			}).then(response => {
+				console.log(response);
 			  commit('SET_TOKEN', '')
 			  removeToken()
 			  resetRouter()
